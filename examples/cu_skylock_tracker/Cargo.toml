@@ -1,0 +1,59 @@
+[package]
+name = "cu-skylock-tracker"
+description = "SKYLOCK's drone tracking pipeline on Copper: RTSP camera, Candle detector, Kalman tracker, Rerun view"
+default-run = "cu-skylock-tracker"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+keywords.workspace = true
+categories.workspace = true
+homepage.workspace = true
+repository.workspace = true
+
+publish = false
+
+[package.metadata.copper]
+environments = ["host"]
+ci_exclude_workspace = true
+
+[[bin]]
+name = "cu-skylock-tracker"
+path = "src/main.rs"
+
+[[bin]]
+name = "cu-skylock-tracker-logreader"
+path = "src/logreader.rs"
+
+[features]
+default = ["cpu"]
+cpu = []
+cuda = ["candle-core/cuda", "candle-nn/cuda"]
+
+[dependencies]
+cu29 = { workspace = true, features = ["log-level-debug", "textlogs"] }
+cu29-export = { workspace = true }
+cu-gstreamer = { workspace = true, features = ["gst"] }
+cu-sensor-payloads = { workspace = true }
+cu-logmon = { workspace = true }
+cu-consolemon = { workspace = true }
+
+# Candle ML framework
+candle-core = "0.11.0"
+candle-nn = "0.11.0"
+# Visualization
+rerun = { workspace = true }
+
+# Serialization
+bincode = { workspace = true }
+serde = { workspace = true }
+
+# Model download
+hf-hub = { version = "1.0.0", features = ["blocking"] }
+
+[package.metadata.cargo-shear]
+ignored = ["cu-logmon", "cu-consolemon"]
+
+[build-dependencies]
+cu29-build = { workspace = true }
